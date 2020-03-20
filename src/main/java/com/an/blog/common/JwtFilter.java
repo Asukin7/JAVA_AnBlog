@@ -41,7 +41,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      * 如果带有 token，则对 token 进行检查，否则直接通过
      */
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws AuthenticationException {
         // 判断请求的请求头是否带上token
         if (isLoginAttempt(request, response)) {
             // 如果存在，则进入executeLogin方法执行登入，检查token是否正确
@@ -52,11 +52,11 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 // token错误
 //                try {
 //                    HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-//                    httpServletResponse.sendRedirect("/error/unknown");
+//                    httpServletResponse.sendRedirect("/error/authentication");
 //                } catch (IOException ex) {
 //                    ex.printStackTrace();
 //                }
-//                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/error/unknown");
+//                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/error/authentication");
 //                try {
 //                    requestDispatcher.forward(request, response);
 //                } catch (ServletException ex) {
@@ -107,7 +107,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected void redirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
-        WebUtils.issueRedirect(request, response, "/error/unknown");
+        WebUtils.issueRedirect(request, response, "/error/authentication");
     }
 
 }

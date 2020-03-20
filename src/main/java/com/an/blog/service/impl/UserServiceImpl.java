@@ -5,6 +5,7 @@ import com.an.blog.bean.UserRole;
 import com.an.blog.dao.UserDao;
 import com.an.blog.dao.UserRoleDao;
 import com.an.blog.service.UserService;
+import com.an.blog.util.MD5Util;
 import com.an.blog.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRoleDao userRoleDao;
 
+    /**
+     * 用户注册
+     * @param user
+     * @return 成功返回true，失败返回false
+     */
     @Override
     public boolean register(User user) {
         boolean result = false;
+        // 用户密码使用MD5加密
+        user.setPassword(MD5Util.getMD5(user.getPassword()));
         // 插入用户数据
         if (userDao.insert(user) > 0) result = true;
         else result = false;
@@ -32,16 +40,26 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    /**
+     * 用户登录
+     * @param user
+     * @return 成功返回用户信息，失败返回null
+     */
     @Override
-    public String login(User user) {
-        String result = null;
-        User userQuery = userDao.login(user.getUsername(), user.getPassword());
-        if (userQuery != null) {// 登录成功
-            if (userQuery.getEnabled() == 1) {// 账号有效
-                result = TokenUtil.creatToken(userQuery.getId(), userQuery.getUsername());// 生成token
-            }
-        }
-        return result;
+    public User login(User user) {
+        // 用户密码使用MD5加密
+        user.setPassword(MD5Util.getMD5(user.getPassword()));
+        return userDao.login(user.getUsername(), user.getPassword());
+    }
+
+    /**
+     * 生成token
+     * @param user
+     * @return 成功返回token，失败返回null
+     */
+    @Override
+    public String getTokenByUser(User user) {
+        return TokenUtil.creatToken(user.getId(), user.getUsername());
     }
 
     @Override

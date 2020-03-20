@@ -8,7 +8,9 @@ public interface UserService {
 
     public boolean register(User user);
 
-    public String login(User user);
+    public User login(User user);
+
+    public String getTokenByUser(User user);
 
     public User getById(Integer id);
 

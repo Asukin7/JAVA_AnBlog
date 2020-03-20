@@ -144,6 +144,7 @@ CREATE TABLE `blog` (
 	`summary` TEXT,
 	`publishDate` DATETIME DEFAULT NULL,
 	`editDate` DATETIME DEFAULT NULL,
+    `viewNumber` INT ( 11 ) DEFAULT 0,
 	FOREIGN KEY ( `userId` ) REFERENCES `user` ( `id` ),
 	FOREIGN KEY ( `categoryId` ) REFERENCES `category` ( `id` ),
 	PRIMARY KEY ( `id` )
