@@ -32,8 +32,6 @@ public class ShiroConfig {
         Map<String, String> filterRuleMap = new HashMap<>();
         filterRuleMap.put("/**", "jwt");
         filterRuleMap.put("/druid/**", "anon");
-        filterRuleMap.put("/error/**", "anon");
-        filterRuleMap.put("/tourist/**", "anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return shiroFilterFactoryBean;
     }

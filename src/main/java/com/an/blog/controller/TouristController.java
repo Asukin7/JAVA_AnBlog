@@ -48,7 +48,7 @@ public class TouristController {
             result.setResultStatus(ResultStatus.LOGIN_DISABLE);
             return result;
         }
-        String token = userService.getTokenByUser(user);
+        String token = userService.getTokenByUser(userLogin);
         if (token == null) {// token生成失败
             result.setResultStatus(ResultStatus.TOKEN_CREAT_FAIL);
             return result;
