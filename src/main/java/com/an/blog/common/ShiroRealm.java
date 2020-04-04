@@ -1,5 +1,6 @@
 package com.an.blog.common;
 
+import com.an.blog.bean.Role;
 import com.an.blog.bean.User;
 import com.an.blog.service.UserService;
 import com.an.blog.util.TokenUtil;
@@ -13,6 +14,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,9 +61,13 @@ public class ShiroRealm extends AuthorizingRealm {
         // 获取id
         Integer id = TokenUtil.getTokenData(principalCollection.getPrimaryPrincipal().toString(), "id").asInt();
         // 获取用户角色
-        List<String> roles = userService.getRolesByUserId(id);
+        List<Role> roleList = userService.getRoleListByUserId(id);
+        List<String> roleNameList = new ArrayList<String>();
+        for (Role role : roleList) {
+            roleNameList.add(role.getName());
+        }
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addRoles(roles);
+        simpleAuthorizationInfo.addRoles(roleNameList);
         return simpleAuthorizationInfo;
     }
 

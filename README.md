@@ -160,3 +160,11 @@ CREATE TABLE `blog_tags` (
 );
 ```
 
+### 接口
+
+| URI         | Method | 权限  |
+| ----------- | ------ | ----- |
+| /tourist/** | *      |       |
+| /user/**    | *      | user  |
+| /admin/**   | *      | admin |
+

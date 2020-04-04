@@ -7,8 +7,6 @@ public class UserRole implements Serializable {
     private Integer id;
     private Integer userId;
     private Integer roleId;
-    private User user;
-    private Role role;
 
     public Integer getId() {
         return id;
@@ -34,30 +32,12 @@ public class UserRole implements Serializable {
         this.roleId = roleId;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     @Override
     public String toString() {
         return "UserRole{" +
                 "id=" + id +
                 ", userId=" + userId +
                 ", roleId=" + roleId +
-                ", user=" + user +
-                ", role=" + role +
                 '}';
     }
 

@@ -1,5 +1,6 @@
 package com.an.blog.service;
 
+import com.an.blog.bean.Role;
 import com.an.blog.bean.User;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public interface UserService {
 
     public User getById(Integer id);
 
-    public List<String> getRolesByUserId(Integer userId);
+    public List<Role> getRoleListByUserId(Integer userId);
+
+    public User getUserInfoByToken(String token);
 
 }

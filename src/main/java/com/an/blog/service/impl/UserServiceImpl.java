@@ -1,7 +1,7 @@
 package com.an.blog.service.impl;
 
+import com.an.blog.bean.Role;
 import com.an.blog.bean.User;
-import com.an.blog.bean.UserRole;
 import com.an.blog.dao.UserDao;
 import com.an.blog.dao.UserRoleDao;
 import com.an.blog.service.UserService;
@@ -10,7 +10,6 @@ import com.an.blog.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service("userService")
@@ -68,13 +67,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> getRolesByUserId(Integer userId) {
-        List<UserRole> userRoleList = userRoleDao.getByUserId(userId);
-        List<String> result = new ArrayList<String>();
-        for (UserRole userRole : userRoleList) {
-            result.add(userRole.getRole().getName());
-        }
-        return result;
+    public List<Role> getRoleListByUserId(Integer userId) {
+        return userRoleDao.getRoleListByUserId(userId);
+    }
+
+    @Override
+    public User getUserInfoByToken(String token) {
+        // 获取id
+        Integer id = TokenUtil.getTokenData(token, "id").asInt();// id
+        if (id == null)  return null;// id为空 错误
+
+        User user = userDao.getById(id);// 获取用户信息
+        user.setPassword(null);// 删除密码
+        return user;
     }
 
 }

@@ -52,7 +52,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 // token错误
 //                try {
 //                    HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-//                    httpServletResponse.sendRedirect("/error/authentication");
+//                    httpServletResponse.sendRedirect("error/authentication");
 //                } catch (IOException ex) {
 //                    ex.printStackTrace();
 //                }

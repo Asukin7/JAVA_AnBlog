@@ -10,7 +10,8 @@ public class UserSqlProvider {
     public String select(Map<String, Object> map) {
         String queryStr = new SQL() {
             {
-                SELECT("user");
+                SELECT("*");
+                FROM("user");
                 if (map.get("id") != null) WHERE("id = #{id}");
                 if (map.get("enabled") != null) WHERE("enabled = #{enabled}");
                 if (map.get("username") != null) WHERE("username = #{username}");
@@ -47,7 +48,6 @@ public class UserSqlProvider {
             {
                 UPDATE("user");
                 if (user.getEnabled() != null) SET("enabled = #{enabled}");
-//                if (user.getUsername() != null) SET("username = #{username}");
                 if (user.getEmail() != null) SET("email = #{email}");
                 if (user.getPassword() != null) SET("password = #{password}");
                 if (user.getNickname() != null) SET("nickname = #{nickname}");
@@ -55,6 +55,7 @@ public class UserSqlProvider {
                 if (user.getProfilePhoto() != null) SET("profilePhoto = #{profilePhoto}");
                 if (user.getAppreciationCode() != null) SET("appreciationCode = #{appreciationCode}");
                 WHERE("id = #{id}");
+                WHERE("username = #{username}");
             }
         }.toString();
         return queryStr;
