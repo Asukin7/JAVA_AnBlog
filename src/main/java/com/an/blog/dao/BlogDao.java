@@ -22,12 +22,22 @@ public interface BlogDao {
             @Result(property = "publishDate", column = "publishDate"),
             @Result(property = "editDate", column = "editDate"),
             @Result(property = "viewNumber", column = "viewNumber"),
-            @Result(property = "tagsList", column = "id", many = @Many(select = "com.an.blog.dao.BlogTagsDao.getTagsListByBlogId"))
+            @Result(property = "tagsList", column = "id", many = @Many(select = "com.an.blog.dao.BlogTagsDao.getTagsListByBlogId")),
+            @Result(property = "user", column = "userId", one = @One(select = "com.an.blog.dao.UserDao.getInfoById")),
+            @Result(property = "category", column = "categoryId", one = @One(select = "com.an.blog.dao.CategoryDao.getById")),
+            @Result(property = "commentNumber", column = "id", one = @One(select = "com.an.blog.dao.CommentDao.getTotalByBlogId"))
     })
     public List<Blog> select(Map<String, Object> map);
 
     @SelectProvider(type = BlogSqlProvider.class, method = "selectTotal")
     public Integer selectTotal(Map<String, Object> map);
+
+    @Select("SELECT blog.* FROM blog LEFT JOIN blog_tags ON blog.id = blog_tags.blogId WHERE blog_tags.tagsId = #{tagsId} ORDER BY blog.editDate LIMIT #{start}, #{size}")
+    @ResultMap("BlogResult")
+    public List<Blog> getListByTagsIdMap(Map<String, Object> map);
+
+    @Select("SELECT COUNT(*) FROM blog LEFT JOIN blog_tags ON blog.id = blog_tags.blogId WHERE blog_tags.tagsId = #{tagsId}")
+    public Integer getTotalByTagsIdMap(Map<String, Object> map);
 
     @Select("SELECT * FROM blog WHERE id = #{id}")
     @ResultMap("BlogResult")
@@ -46,5 +56,8 @@ public interface BlogDao {
 
     @Delete("DELETE FROM blog WHERE id = #{id}")
     public Integer deleteById(Integer id);
+
+    @Update("UPDATE blog SET viewNumber = viewNumber + 1 WHERE id = #{id}")
+    public Integer addViewNumberById(Integer id);
 
 }

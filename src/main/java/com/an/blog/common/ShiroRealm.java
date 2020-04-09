@@ -45,7 +45,7 @@ public class ShiroRealm extends AuthorizingRealm {
         // 获取id
         Integer id = TokenUtil.getTokenData(token, "id").asInt();
         // 查询数据库是否存在该用户
-        User user = userService.getById(id);
+        User user = userService.getUserInfoById(id);
         if (user == null) throw new AuthenticationException("账号不存在");
         // 该用户是否可用
         if (user.getEnabled() == 0) throw new AuthenticationException("账号已封禁");

@@ -20,6 +20,35 @@ public class BlogController {
     private BlogService blogService;
 
     @RequiresRoles("user")
+    @GetMapping("/user/blog/{id}")
+    public Result userGetBlog(@RequestHeader("Authorization") String token, @PathVariable Integer id) {
+        Result result = new Result();
+
+        // 获取文章
+        Blog blog = blogService.getBlogById(id);
+        if (blog == null) {// 文章不存在
+            result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
+            return result;
+        }
+
+        if (blog.getUserId() != TokenUtil.getTokenData(token, "id").asInt()) {// 操作用户不是文章作者
+            if (blog.getState() != 1) {// 文章未发布
+                result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
+                return result;
+            } else {
+                // 阅读数加一
+                blogService.addBlogViewNumberById(id);
+                blog.setViewNumber(blog.getViewNumber() + 1);
+            }
+        }
+
+        Map<String, Object> resultData = new HashMap<String, Object>();
+        resultData.put("blog", blog);
+        result.setData(resultData);
+        return result;
+    }
+
+    @RequiresRoles("user")
     @GetMapping("/user/blogList")
     public Result userGetBlogList(@RequestHeader("Authorization") String token, @RequestParam Map<String, Object> map) {
         Result result = new Result();
@@ -32,30 +61,6 @@ public class BlogController {
         Map<String, Object> resultData = new HashMap<String, Object>();
         resultData.put("blogList", blogList);
         resultData.put("blogTotal", blogTotal);
-        result.setData(resultData);
-        return result;
-    }
-
-    @RequiresRoles("user")
-    @GetMapping("/user/blog/{id}")
-    public Result userGetBlog(@RequestHeader("Authorization") String token, @PathVariable Integer id) {
-        Result result = new Result();
-
-        // 获取文章
-        Blog blog = blogService.getBlogById(id);
-        if (blog == null) {// 文章不存在
-            result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
-            return result;
-        }
-        if (blog.getState() != 1) {// 文章未发布
-            if (blog.getUserId() != TokenUtil.getTokenData(token, "id").asInt()) {// 操作用户不是文章作者
-                result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
-                return result;
-            }
-        }
-
-        Map<String, Object> resultData = new HashMap<String, Object>();
-        resultData.put("blog", blog);
         result.setData(resultData);
         return result;
     }
@@ -102,6 +107,31 @@ public class BlogController {
         return result;
     }
 
+    @GetMapping("/tourist/blog/{id}")
+    public Result touristGetBlog(@PathVariable Integer id) {
+        Result result = new Result();
+
+        // 获取文章
+        Blog blog = blogService.getBlogById(id);
+        if (blog == null) {// 文章不存在
+            result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
+            return result;
+        }
+        if (blog.getState() != 1) {// 文章未发布
+            result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
+            return result;
+        }
+
+        // 阅读数加一
+        blogService.addBlogViewNumberById(id);
+        blog.setViewNumber(blog.getViewNumber() + 1);
+
+        Map<String, Object> resultData = new HashMap<String, Object>();
+        resultData.put("blog", blog);
+        result.setData(resultData);
+        return result;
+    }
+
     @GetMapping("/tourist/blogList")
     public Result touristGetBlogList(@RequestParam Map<String, Object> map) {
         Result result = new Result();
@@ -116,26 +146,6 @@ public class BlogController {
         Map<String, Object> resultData = new HashMap<String, Object>();
         resultData.put("blogList", blogList);
         resultData.put("blogTotal", blogTotal);
-        result.setData(resultData);
-        return result;
-    }
-
-    @GetMapping("/tourist/blog/{id}")
-    public Result touristGetBlog(@PathVariable Integer id) {
-        Result result = new Result();
-        // 获取文章
-        Blog blog = blogService.getBlogById(id);
-        if (blog == null) {// 文章不存在
-            result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
-            return result;
-        }
-        if (blog.getState() != 1) {// 文章未发布
-            result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
-            return result;
-        }
-
-        Map<String, Object> resultData = new HashMap<String, Object>();
-        resultData.put("blog", blog);
         result.setData(resultData);
         return result;
     }

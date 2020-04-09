@@ -15,6 +15,9 @@ public interface UserDao {
     @Select("SELECT * FROM user WHERE id = #{id}")
     public User getById(Integer id);
 
+    @Select("SELECT id, enabled, nickname, introduction, profilePhoto, appreciationCode FROM user WHERE id = #{id}")
+    public User getInfoById(Integer id);
+
     @Select("SELECT * FROM user WHERE username = #{username} AND password = #{password}")
     public User login(String username, String password);
 
@@ -24,6 +27,12 @@ public interface UserDao {
 
     @UpdateProvider(type = UserSqlProvider.class, method = "update")
     public Integer update(User user);
+
+    @UpdateProvider(type = UserSqlProvider.class, method = "updateInfo")
+    public Integer updateInfo(User user);
+
+    @UpdateProvider(type = UserSqlProvider.class, method = "updateSafe")
+    public Integer updateSafe(User user);
 
     @Delete("DELETE FROM user WHERE id = #{id}")
     public Integer deleteById(Integer id);

@@ -1,8 +1,8 @@
 package com.an.blog.controller;
 
-import com.an.blog.bean.Category;
+import com.an.blog.bean.Tags;
 import com.an.blog.common.Result;
-import com.an.blog.service.CategoryService;
+import com.an.blog.service.TagsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,19 +12,19 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class CategoryController {
+public class TagsController {
 
     @Autowired
-    private CategoryService categoryService;
+    private TagsService tagsService;
 
-    @GetMapping("/tourist/categoryList")
-    public Result touristGetList() {
+    @GetMapping("/tourist/tagsList/rand")
+    public Result touristGetListByRand() {
         Result result = new Result();
 
-        List<Category> categoryList = categoryService.getList();
+        List<Tags> tagsList = tagsService.getListByRand();
 
         Map<String, Object> resultData = new HashMap<String, Object>();
-        resultData.put("categoryList", categoryList);
+        resultData.put("tagsList", tagsList);
         result.setData(resultData);
         return result;
     }

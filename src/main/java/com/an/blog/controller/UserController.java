@@ -6,10 +6,7 @@ import com.an.blog.common.ResultStatus;
 import com.an.blog.service.UserService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +32,20 @@ public class UserController {
         Map<String, Object> resultData = new HashMap<String, Object>();
         resultData.put("user", user);
         result.setData(resultData);
+        return result;
+    }
+
+
+    @RequiresRoles("user")
+    @PutMapping("/info")
+    public Result updateUserInfo(@RequestHeader("Authorization") String token, @RequestBody User user) {
+        Result result = new Result();
+
+        if (!userService.updateUserInfoByTokenAndUser(token, user)) {
+            result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
+            return result;
+        }
+
         return result;
     }
 

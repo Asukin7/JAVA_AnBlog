@@ -158,6 +158,19 @@ CREATE TABLE `blog_tags` (
 	FOREIGN KEY ( `tagsId` ) REFERENCES `tags` ( `id` ),
 	PRIMARY KEY ( `id` )
 );
+
+CREATE TABLE `comment` (
+	`id` INT ( 11 ) NOT NULL AUTO_INCREMENT,
+	`userId` INT ( 11 ) DEFAULT NULL,
+	`blogId` INT ( 11 ) DEFAULT NULL,
+	`rootId` INT ( 11 ) DEFAULT 0 COMMENT '父级的评论ID',
+	`dialogId` INT ( 11 ) DEFAULT 0 COMMENT '回复的评论的用户ID',
+	`content` TEXT,
+	`publishDate` DATETIME DEFAULT NULL,
+	FOREIGN KEY ( `userId` ) REFERENCES `user` ( `id` ),
+	FOREIGN KEY ( `blogId` ) REFERENCES `blog` ( `id` ),
+	PRIMARY KEY ( `id` )
+);
 ```
 
 ### 接口

@@ -10,4 +10,7 @@ public interface CategoryDao {
     @Select("SELECT * FROM category")
     public List<Category> getList();
 
+    @Select("SELECT * FROM category WHERE id = #{id}")
+    public Category getById(Integer id);
+
 }

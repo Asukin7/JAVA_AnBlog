@@ -21,7 +21,10 @@ public class Blog implements Serializable {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone="Asia/Shanghai")
     private Date editDate;
     private Integer viewNumber;
+    private Integer commentNumber;
     private List<Tags> tagsList;
+    private User user;
+    private Category category;
 
     public Integer getId() {
         return id;
@@ -119,6 +122,30 @@ public class Blog implements Serializable {
         this.tagsList = tagsList;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Integer getCommentNumber() {
+        return commentNumber;
+    }
+
+    public void setCommentNumber(Integer commentNumber) {
+        this.commentNumber = commentNumber;
+    }
+
     @Override
     public String toString() {
         return "Blog{" +
@@ -133,7 +160,10 @@ public class Blog implements Serializable {
                 ", publishDate=" + publishDate +
                 ", editDate=" + editDate +
                 ", viewNumber=" + viewNumber +
+                ", commentNumber=" + commentNumber +
                 ", tagsList=" + tagsList +
+                ", user=" + user +
+                ", category=" + category +
                 '}';
     }
 

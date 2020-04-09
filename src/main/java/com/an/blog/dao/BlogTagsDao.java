@@ -20,7 +20,7 @@ public interface BlogTagsDao {
             "</foreach>",
             "</script>"
     })
-    public Integer addByTagsIdListAndBlogId(List<Integer> tagsIdList, Integer blogId);
+    public Integer insertByTagsIdListAndBlogId(List<Integer> tagsIdList, Integer blogId);
 
     @Delete("DELETE FROM blog_tags WHERE blogId = #{blogId}")
     public Integer deleteByBlogId(Integer blogId);

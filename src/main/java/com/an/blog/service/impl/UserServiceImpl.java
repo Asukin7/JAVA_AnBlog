@@ -62,13 +62,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Integer id) {
-        return userDao.getById(id);
-    }
-
-    @Override
-    public List<Role> getRoleListByUserId(Integer userId) {
-        return userRoleDao.getRoleListByUserId(userId);
+    public User getUserInfoById(Integer id) {
+        return userDao.getInfoById(id);
     }
 
     @Override
@@ -77,9 +72,29 @@ public class UserServiceImpl implements UserService {
         Integer id = TokenUtil.getTokenData(token, "id").asInt();// id
         if (id == null)  return null;// id为空 错误
 
-        User user = userDao.getById(id);// 获取用户信息
-        user.setPassword(null);// 删除密码
-        return user;
+        return userDao.getInfoById(id);
+    }
+
+    @Override
+    public List<Role> getRoleListByUserId(Integer userId) {
+        return userRoleDao.getRoleListByUserId(userId);
+    }
+
+
+    @Override
+    public boolean updateUserInfoByTokenAndUser(String token, User user) {
+        // 设置id
+        Integer id = TokenUtil.getTokenData(token, "id").asInt();// id
+        if (id != null) user.setId(id);// id非空 设置
+        else return false;// id为空 错误
+        // 设置username
+        String username = TokenUtil.getTokenData(token, "username").asString();// username
+        if (username != null) user.setUsername(username);// username非空 设置
+        else return false;// username为空 错误
+
+        Integer updateNumber = userDao.updateInfo(user);
+        if (updateNumber == null || updateNumber == 0) return false;
+        else return true;
     }
 
 }

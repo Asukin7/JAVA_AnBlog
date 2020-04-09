@@ -32,6 +32,15 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public Blog getBlogByTokenAndId(String token, Integer id) {
+        // 获取作者id
+        Integer userId = TokenUtil.getTokenData(token, "id").asInt();// 获取userId
+        if (userId == null)  return null;// userId为空 错误
+
+        return blogDao.getByIdAndUserId(id, userId);
+    }
+
+    @Override
     public List<Blog> getBlogListByMap(Map<String, Object> map) {
         // 设置分页查找
         if (map.get("page") == null) map.put("page", 1);// 默认第一页
@@ -40,12 +49,8 @@ public class BlogServiceImpl implements BlogService {
         else map.put("size", Integer.parseInt(String.valueOf(map.get("size"))));// 转Integer
         map.put("start", PageUtil.getStart((Integer) map.get("page"), (Integer) map.get("size")));// 计算开始条数
 
-        return blogDao.select(map);
-    }
-
-    @Override
-    public Integer getBlogTotalByMap(Map<String, Object> map) {
-        return blogDao.selectTotal(map);
+        if (map.get("tagsId") != null) return blogDao.getListByTagsIdMap(map);
+        else return blogDao.select(map);
     }
 
     @Override
@@ -66,6 +71,12 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public Integer getBlogTotalByMap(Map<String, Object> map) {
+        if (map.get("tagsId") != null) return blogDao.getTotalByTagsIdMap(map);
+        else return blogDao.selectTotal(map);
+    }
+
+    @Override
     public Integer getBlogTotalByTokenAndMap(String token, Map<String, Object> map) {
         // 设置作者id
         Integer userId = TokenUtil.getTokenData(token, "id").asInt();// 获取userId
@@ -73,14 +84,6 @@ public class BlogServiceImpl implements BlogService {
         else return null;// userId为空 错误
 
         return blogDao.selectTotal(map);
-    }
-
-    @Override
-    public Blog getBlogByTokenAndId(String token, Integer id) {
-        // 获取作者id
-        Integer userId = TokenUtil.getTokenData(token, "id").asInt();// 获取userId
-        if (userId == null)  return null;// userId为空 错误
-        return blogDao.getByIdAndUserId(id, userId);
     }
 
     @Override
@@ -139,9 +142,11 @@ public class BlogServiceImpl implements BlogService {
         if (userId == null)  return false;// userId为空 错误
 
         if (blogDao.getByIdAndUserId(id, userId) == null) return false;// 验证作者
+
         blogTagsDao.deleteByBlogId(id);// 删除此篇blog的所有tags
-        Integer delete = blogDao.deleteById(id);// 删除此篇blog
-        if (delete == null || delete == 0) return false;
+
+        Integer deleteNumber = blogDao.deleteById(id);// 删除此篇blog
+        if (deleteNumber == null || deleteNumber == 0) return false;
         else return true;
     }
 
@@ -153,18 +158,25 @@ public class BlogServiceImpl implements BlogService {
 
         List<Integer> tagsIdList = new ArrayList<Integer>();
         for (Tags tags : tagsList) {
-            Tags temp = tagsDao.getByName(tags.getName());// 查询是否存在tags
-            if (temp != null) {
-                tagsIdList.add(temp.getId());// 存在则获取id
+            Tags tagsQuery = tagsDao.getByName(tags.getName());// 查询是否存在tags
+            if (tagsQuery != null) {
+                tagsIdList.add(tagsQuery.getId());// 存在则获取id
             } else {
                 tagsDao.insert(tags);// 不存在则插入tags
                 tagsIdList.add(tags.getId());// 并获取id
             }
         }
 
-        Integer add = blogTagsDao.addByTagsIdListAndBlogId(tagsIdList, blogId);// 为此篇blog添加tags
-        if (tagsList.size() == add) return true;
+        Integer insertNumber = blogTagsDao.insertByTagsIdListAndBlogId(tagsIdList, blogId);// 为此篇blog添加tags
+        if (tagsList.size() == insertNumber) return true;
         else return false;
+    }
+
+    @Override
+    public boolean addBlogViewNumberById(Integer id) {
+        Integer addNumber = blogDao.addViewNumberById(id);
+        if (addNumber == null || addNumber == 0) return false;
+        else return true;
     }
 
 }

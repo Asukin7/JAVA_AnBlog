@@ -13,10 +13,12 @@ public interface UserService {
 
     public String getTokenByUser(User user);
 
-    public User getById(Integer id);
+    public User getUserInfoById(Integer id);
+
+    public User getUserInfoByToken(String token);
 
     public List<Role> getRoleListByUserId(Integer userId);
 
-    public User getUserInfoByToken(String token);
+    public boolean updateUserInfoByTokenAndUser(String token, User user);
 
 }
