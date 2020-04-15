@@ -16,6 +16,12 @@ public interface CommentService {
 
     public Integer getChildCommentTotalByRootId(Integer rootId);
 
+    public List<Comment> getRootCommentListByTokenAndBlogIdAndPage(String token, Integer blogId, Integer page);
+
+    public List<Comment> getChildCommentListByTokenAndRootIdAndPage(String token, Integer rootId, Integer page);
+
     public boolean insertByTokenAndComment(String token, Comment comment);
+
+    public boolean deleteByTokenAndId(String token, Integer id);
 
 }

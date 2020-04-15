@@ -2,9 +2,7 @@ package com.an.blog.service.impl;
 
 import com.an.blog.bean.Blog;
 import com.an.blog.bean.Tags;
-import com.an.blog.dao.BlogDao;
-import com.an.blog.dao.BlogTagsDao;
-import com.an.blog.dao.TagsDao;
+import com.an.blog.dao.*;
 import com.an.blog.service.BlogService;
 import com.an.blog.util.PageUtil;
 import com.an.blog.util.TokenUtil;
@@ -25,6 +23,12 @@ public class BlogServiceImpl implements BlogService {
     private TagsDao tagsDao;
     @Autowired
     private BlogTagsDao blogTagsDao;
+    @Autowired
+    private BlogLikeDao blogLikeDao;
+    @Autowired
+    private CommentDao commentDao;
+    @Autowired
+    private CommentLikeDao commentLikeDao;
 
     @Override
     public Blog getBlogById(Integer id) {
@@ -35,7 +39,7 @@ public class BlogServiceImpl implements BlogService {
     public Blog getBlogByTokenAndId(String token, Integer id) {
         // 获取作者id
         Integer userId = TokenUtil.getTokenData(token, "id").asInt();// 获取userId
-        if (userId == null)  return null;// userId为空 错误
+        if (userId == null) return null;// userId为空 错误
 
         return blogDao.getByIdAndUserId(id, userId);
     }
@@ -49,8 +53,7 @@ public class BlogServiceImpl implements BlogService {
         else map.put("size", Integer.parseInt(String.valueOf(map.get("size"))));// 转Integer
         map.put("start", PageUtil.getStart((Integer) map.get("page"), (Integer) map.get("size")));// 计算开始条数
 
-        if (map.get("tagsId") != null) return blogDao.getListByTagsIdMap(map);
-        else return blogDao.select(map);
+        return blogDao.getListByMap(map);
     }
 
     @Override
@@ -67,13 +70,12 @@ public class BlogServiceImpl implements BlogService {
         else map.put("size", Integer.parseInt(String.valueOf(map.get("size"))));// 转Integer
         map.put("start", PageUtil.getStart((Integer) map.get("page"), (Integer) map.get("size")));// 计算开始条数
 
-        return blogDao.select(map);
+        return blogDao.getListByMap(map);
     }
 
     @Override
     public Integer getBlogTotalByMap(Map<String, Object> map) {
-        if (map.get("tagsId") != null) return blogDao.getTotalByTagsIdMap(map);
-        else return blogDao.selectTotal(map);
+        return blogDao.getTotalByMap(map);
     }
 
     @Override
@@ -83,7 +85,7 @@ public class BlogServiceImpl implements BlogService {
         if (userId != null) map.put("userId", userId);// userId非空 设置
         else return null;// userId为空 错误
 
-        return blogDao.selectTotal(map);
+        return blogDao.getTotalByMap(map);
     }
 
     @Override
@@ -139,9 +141,15 @@ public class BlogServiceImpl implements BlogService {
     public boolean deleteBlogByTokenAndId(String token, Integer id) {
         // 获取作者id
         Integer userId = TokenUtil.getTokenData(token, "id").asInt();// 获取userId
-        if (userId == null)  return false;// userId为空 错误
+        if (userId == null) return false;// userId为空 错误
 
         if (blogDao.getByIdAndUserId(id, userId) == null) return false;// 验证作者
+
+        commentLikeDao.deleteByBlogId(id);// 删除此篇blog的所有评论的所有赞
+
+        commentDao.deleteByBlogId(id);// 删除此篇blog的所有评论
+
+        blogLikeDao.deleteByBlogId(id);// 删除此篇blog的所有赞
 
         blogTagsDao.deleteByBlogId(id);// 删除此篇blog的所有tags
 

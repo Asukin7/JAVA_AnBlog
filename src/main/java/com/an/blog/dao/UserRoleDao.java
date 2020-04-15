@@ -15,6 +15,7 @@ public interface UserRoleDao {
     public List<UserRole> getByRoleId(Integer roleId);
 
     @Insert("INSERT INTO user_role(userId, roleId) VALUES(#{userId}, #{roleId})")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     public Integer insert(Integer userId, Integer roleId);
 
     @Delete("DELETE FROM user_role WHERE id = #{id}")

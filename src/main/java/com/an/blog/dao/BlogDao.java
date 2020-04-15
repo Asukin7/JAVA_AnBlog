@@ -9,8 +9,33 @@ import java.util.Map;
 
 public interface BlogDao {
 
-    @SelectProvider(type = BlogSqlProvider.class, method = "select")
+    @Select("SELECT * FROM blog WHERE id = #{id}")
     @Results(id = "BlogResult", value = {
+            @Result(property = "id", column = "id", id = true),
+            @Result(property = "userId", column = "userId"),
+            @Result(property = "categoryId", column = "categoryId"),
+            @Result(property = "state", column = "state"),
+            @Result(property = "title", column = "title"),
+            @Result(property = "mdContent", column = "mdContent"),
+            @Result(property = "htmlContent", column = "htmlContent"),
+            @Result(property = "summary", column = "summary"),
+            @Result(property = "publishDate", column = "publishDate"),
+            @Result(property = "editDate", column = "editDate"),
+            @Result(property = "viewNumber", column = "viewNumber"),
+            @Result(property = "tagsList", column = "id", many = @Many(select = "com.an.blog.dao.BlogTagsDao.getTagsListByBlogId")),
+            @Result(property = "user", column = "userId", one = @One(select = "com.an.blog.dao.UserDao.getInfoById")),
+            @Result(property = "category", column = "categoryId", one = @One(select = "com.an.blog.dao.CategoryDao.getById")),
+            @Result(property = "commentNumber", column = "id", one = @One(select = "com.an.blog.dao.CommentDao.getTotalByBlogId")),
+            @Result(property = "likeNumber", column = "id", one = @One(select = "com.an.blog.dao.BlogLikeDao.getTotalByBlogId"))
+    })
+    public Blog getById(Integer id);
+
+    @Select("SELECT blog.*, blog_like.id IS NOT NULL AS likeAction FROM blog LEFT OUTER JOIN blog_like ON blog.id = blog_like.blogId AND blog_like.userId = #{userId} WHERE blog.id = #{id}")
+    @ResultMap("BlogResult")
+    public Blog getByIdAndUserId(Integer id, Integer userId);
+
+    @SelectProvider(type = BlogSqlProvider.class, method = "getListByMap")
+    @Results(id = "BlogResultList", value = {
             @Result(property = "id", column = "id", id = true),
             @Result(property = "userId", column = "userId"),
             @Result(property = "categoryId", column = "categoryId"),
@@ -27,25 +52,10 @@ public interface BlogDao {
             @Result(property = "category", column = "categoryId", one = @One(select = "com.an.blog.dao.CategoryDao.getById")),
             @Result(property = "commentNumber", column = "id", one = @One(select = "com.an.blog.dao.CommentDao.getTotalByBlogId"))
     })
-    public List<Blog> select(Map<String, Object> map);
+    public List<Blog> getListByMap(Map<String, Object> map);
 
-    @SelectProvider(type = BlogSqlProvider.class, method = "selectTotal")
-    public Integer selectTotal(Map<String, Object> map);
-
-    @Select("SELECT blog.* FROM blog LEFT JOIN blog_tags ON blog.id = blog_tags.blogId WHERE blog_tags.tagsId = #{tagsId} ORDER BY blog.editDate LIMIT #{start}, #{size}")
-    @ResultMap("BlogResult")
-    public List<Blog> getListByTagsIdMap(Map<String, Object> map);
-
-    @Select("SELECT COUNT(*) FROM blog LEFT JOIN blog_tags ON blog.id = blog_tags.blogId WHERE blog_tags.tagsId = #{tagsId}")
-    public Integer getTotalByTagsIdMap(Map<String, Object> map);
-
-    @Select("SELECT * FROM blog WHERE id = #{id}")
-    @ResultMap("BlogResult")
-    public Blog getById(Integer id);
-
-    @Select("SELECT * FROM blog WHERE id = #{id} AND userId = #{userId}")
-    @ResultMap("BlogResult")
-    public Blog getByIdAndUserId(Integer id, Integer userId);
+    @SelectProvider(type = BlogSqlProvider.class, method = "getTotalByMap")
+    public Integer getTotalByMap(Map<String, Object> map);
 
     @InsertProvider(type = BlogSqlProvider.class, method = "insert")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")

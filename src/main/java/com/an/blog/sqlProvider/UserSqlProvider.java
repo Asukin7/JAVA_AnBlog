@@ -43,24 +43,6 @@ public class UserSqlProvider {
         return queryStr;
     }
 
-    public String update(User user) {
-        String queryStr = new SQL() {
-            {
-                UPDATE("user");
-                if (user.getEnabled() != null) SET("enabled = #{enabled}");
-                if (user.getEmail() != null) SET("email = #{email}");
-                if (user.getPassword() != null) SET("password = #{password}");
-                if (user.getNickname() != null) SET("nickname = #{nickname}");
-                if (user.getIntroduction() != null) SET("introduction = #{introduction}");
-                if (user.getProfilePhoto() != null) SET("profilePhoto = #{profilePhoto}");
-                if (user.getAppreciationCode() != null) SET("appreciationCode = #{appreciationCode}");
-                WHERE("id = #{id}");
-                WHERE("username = #{username}");
-            }
-        }.toString();
-        return queryStr;
-    }
-
     public String updateInfo(User user) {
         String queryStr = new SQL() {
             {
@@ -69,19 +51,6 @@ public class UserSqlProvider {
                 if (user.getIntroduction() != null) SET("introduction = #{introduction}");
                 if (user.getProfilePhoto() != null) SET("profilePhoto = #{profilePhoto}");
                 if (user.getAppreciationCode() != null) SET("appreciationCode = #{appreciationCode}");
-                WHERE("id = #{id}");
-                WHERE("username = #{username}");
-            }
-        }.toString();
-        return queryStr;
-    }
-
-    public String updateSafe(User user) {
-        String queryStr = new SQL() {
-            {
-                UPDATE("user");
-                if (user.getEmail() != null) SET("email = #{email}");
-                if (user.getPassword() != null) SET("password = #{password}");
                 WHERE("id = #{id}");
                 WHERE("username = #{username}");
             }

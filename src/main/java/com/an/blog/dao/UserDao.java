@@ -18,6 +18,21 @@ public interface UserDao {
     @Select("SELECT id, enabled, nickname, introduction, profilePhoto, appreciationCode FROM user WHERE id = #{id}")
     public User getInfoById(Integer id);
 
+    @Select("SELECT id, enabled, username, email FROM user WHERE id = #{id}")
+    public User getSafeById(Integer id);
+
+    @Select("SELECT * FROM user WHERE username = #{username}")
+    public User getByUsername(String username);
+
+    @Select("SELECT * FROM user WHERE email = #{email}")
+    public User getByEmail(String email);
+
+    @Select("SELECT * FROM user WHERE username = #{username} AND email = #{email}")
+    public User getByUsernameAndEmail(String username, String email);
+
+    @Select("SELECT * FROM user WHERE id = #{id} AND username = #{username} AND password = #{password}")
+    public User getByIdAndUsernameAndPassword(User user);
+
     @Select("SELECT * FROM user WHERE username = #{username} AND password = #{password}")
     public User login(String username, String password);
 
@@ -25,14 +40,14 @@ public interface UserDao {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     public Integer insert(User user);
 
-    @UpdateProvider(type = UserSqlProvider.class, method = "update")
-    public Integer update(User user);
-
     @UpdateProvider(type = UserSqlProvider.class, method = "updateInfo")
     public Integer updateInfo(User user);
 
-    @UpdateProvider(type = UserSqlProvider.class, method = "updateSafe")
-    public Integer updateSafe(User user);
+    @Update("UPDATE user SET password = #{password} WHERE id = #{id} AND username = #{username}")
+    public Integer updatePasswordByIdAndUsername(User user);
+
+    @Update("UPDATE user SET password = #{password} WHERE username = #{username} AND email = #{email}")
+    public Integer updatePasswordByUsernameAndEmail(User user);
 
     @Delete("DELETE FROM user WHERE id = #{id}")
     public Integer deleteById(Integer id);

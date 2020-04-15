@@ -19,6 +19,8 @@ public class Comment implements Serializable {
     private User user;
     private User dialog;
     private Integer commentTotal;
+    private Integer likeTotal;
+    private Integer likeAction;
     private List<Comment> commentList;
 
     public Integer getId() {
@@ -101,6 +103,22 @@ public class Comment implements Serializable {
         this.commentTotal = commentTotal;
     }
 
+    public Integer getLikeTotal() {
+        return likeTotal;
+    }
+
+    public void setLikeTotal(Integer likeTotal) {
+        this.likeTotal = likeTotal;
+    }
+
+    public Integer getLikeAction() {
+        return likeAction;
+    }
+
+    public void setLikeAction(Integer likeAction) {
+        this.likeAction = likeAction;
+    }
+
     public List<Comment> getCommentList() {
         return commentList;
     }
@@ -122,6 +140,8 @@ public class Comment implements Serializable {
                 ", user=" + user +
                 ", dialog=" + dialog +
                 ", commentTotal=" + commentTotal +
+                ", likeTotal=" + likeTotal +
+                ", likeAction=" + likeAction +
                 ", commentList=" + commentList +
                 '}';
     }

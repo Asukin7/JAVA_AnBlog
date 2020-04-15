@@ -42,8 +42,7 @@ public class HelloWorldController {
     @PostMapping("/image/upload")
     public Result uploadImg(HttpServletRequest req, MultipartFile image) {
         String imgRelativePath = "/image/" + new SimpleDateFormat("yyyyMMdd").format(new Date());// 文件存储相对路径
-//        String imgGetFullPath = req.getServletContext().getRealPath(imgRelativePath);// 文件存储绝对路径
-        String imgGetFullPath = "D:/test/AnBlog" + imgRelativePath;// 文件存储绝对路径 !!!!!!此为开发路径 生产环境需要修改!!!!!!
+        String imgGetFullPath = "./AnBlog" + imgRelativePath;// 文件存储绝对路径
 
         File imgFolder = new File(imgGetFullPath);// 文件存储文件夹
         if (!imgFolder.exists()) {// 如果文件夹不存在
@@ -51,11 +50,14 @@ public class HelloWorldController {
         }
 
         StringBuffer imgUrl = new StringBuffer();// 文件访问地址
-        imgUrl.append(req.getScheme())
-                .append("://")
-                .append(req.getServerName())// 服务地址
-                .append(":")
-                .append(req.getServerPort())// 服务端口
+//        imgUrl.append(req.getScheme())// 开发环境
+//                .append("://")
+//                .append(req.getServerName())// 服务地址
+//                .append(":")
+//                .append(req.getServerPort())// 服务端口
+//                .append(req.getContextPath())// 存储路径
+//                .append(imgRelativePath);// 文件路径
+        imgUrl.append("https://nnsststt.cn")// 生产环境
                 .append(req.getContextPath())// 存储路径
                 .append(imgRelativePath);// 文件路径
 

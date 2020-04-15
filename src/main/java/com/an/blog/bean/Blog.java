@@ -22,9 +22,11 @@ public class Blog implements Serializable {
     private Date editDate;
     private Integer viewNumber;
     private Integer commentNumber;
+    private Integer likeNumber;
     private List<Tags> tagsList;
     private User user;
     private Category category;
+    private Integer likeAction;
 
     public Integer getId() {
         return id;
@@ -114,6 +116,22 @@ public class Blog implements Serializable {
         this.viewNumber = viewNumber;
     }
 
+    public Integer getCommentNumber() {
+        return commentNumber;
+    }
+
+    public void setCommentNumber(Integer commentNumber) {
+        this.commentNumber = commentNumber;
+    }
+
+    public Integer getLikeNumber() {
+        return likeNumber;
+    }
+
+    public void setLikeNumber(Integer likeNumber) {
+        this.likeNumber = likeNumber;
+    }
+
     public List<Tags> getTagsList() {
         return tagsList;
     }
@@ -138,12 +156,12 @@ public class Blog implements Serializable {
         this.category = category;
     }
 
-    public Integer getCommentNumber() {
-        return commentNumber;
+    public Integer getLikeAction() {
+        return likeAction;
     }
 
-    public void setCommentNumber(Integer commentNumber) {
-        this.commentNumber = commentNumber;
+    public void setLikeAction(Integer likeAction) {
+        this.likeAction = likeAction;
     }
 
     @Override
@@ -161,9 +179,11 @@ public class Blog implements Serializable {
                 ", editDate=" + editDate +
                 ", viewNumber=" + viewNumber +
                 ", commentNumber=" + commentNumber +
+                ", likeNumber=" + likeNumber +
                 ", tagsList=" + tagsList +
                 ", user=" + user +
                 ", category=" + category +
+                ", likeAction=" + likeAction +
                 '}';
     }
 

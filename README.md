@@ -21,7 +21,6 @@
   - 删除
   - 查询
 - 博客管理
-  - 封禁
   - 删除
   - 查询
 - 博客评论管理
@@ -32,7 +31,7 @@
   - 修改
   - 删除
   - 查询
-- 通知推送
+- 通知管理
   - 推送
   - 撰写
   - 删除
@@ -51,27 +50,22 @@
   - 昵称
   - 简介
   - 赞赏码
-- 通知管理
-  - 查看
-  - 已读
-  - 删除
 - 博客管理
   - 发布
   - 撰写
   - 修改
   - 删除
   - 查询
-  - 所属模块
-    - 设置
-    - 修改
-  - 自定义标签
-    - 设置
-    - 删除
-  - 评论
-    - 回复
-    - 删除
-- 点赞博客
-- 评论博客
+- 博客评论管理
+  - 回复
+  - 删除
+- 博客点赞管理
+  - 点赞
+  - 删除
+- 通知管理
+  - 查看
+  - 已读
+  - 删除
 
 #### 游客
 
@@ -169,6 +163,29 @@ CREATE TABLE `comment` (
 	`publishDate` DATETIME DEFAULT NULL,
 	FOREIGN KEY ( `userId` ) REFERENCES `user` ( `id` ),
 	FOREIGN KEY ( `blogId` ) REFERENCES `blog` ( `id` ),
+	PRIMARY KEY ( `id` )
+);
+
+CREATE TABLE `blog_like` (
+	`id` INT ( 11 ) NOT NULL AUTO_INCREMENT,
+	`userId` INT ( 11 ) DEFAULT NULL,
+	`blogId` INT ( 11 ) DEFAULT NULL,
+	`date` DATETIME DEFAULT NULL,
+	FOREIGN KEY ( `userId` ) REFERENCES `user` ( `id` ),
+	FOREIGN KEY ( `blogId` ) REFERENCES `blog` ( `id` ),
+	PRIMARY KEY ( `id` )
+);
+
+CREATE TABLE `comment_like` (
+	`id` INT ( 11 ) NOT NULL AUTO_INCREMENT,
+	`userId` INT ( 11 ) DEFAULT NULL,
+	`blogId` INT ( 11 ) DEFAULT NULL,
+	`commentId` INT ( 11 ) DEFAULT NULL,
+	`rootId` INT ( 11 ) DEFAULT 0,
+	`date` DATETIME DEFAULT NULL,
+	FOREIGN KEY ( `userId` ) REFERENCES `user` ( `id` ),
+	FOREIGN KEY ( `blogId` ) REFERENCES `blog` ( `id` ),
+	FOREIGN KEY ( `commentId` ) REFERENCES `comment` ( `id` ),
 	PRIMARY KEY ( `id` )
 );
 ```

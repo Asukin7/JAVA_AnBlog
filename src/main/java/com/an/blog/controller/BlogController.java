@@ -25,7 +25,7 @@ public class BlogController {
         Result result = new Result();
 
         // 获取文章
-        Blog blog = blogService.getBlogById(id);
+        Blog blog = blogService.getBlogByTokenAndId(token, id);
         if (blog == null) {// 文章不存在
             result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
             return result;

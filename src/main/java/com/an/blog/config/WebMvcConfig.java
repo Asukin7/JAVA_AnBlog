@@ -9,8 +9,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // !!!!!!此为开发路径 生产环境需要修改!!!!!!
-        registry.addResourceHandler("/image/**").addResourceLocations("file:D:/test/AnBlog/image/");
+        registry.addResourceHandler("/image/**").addResourceLocations("file:./AnBlog/image/");
     }
 
 }

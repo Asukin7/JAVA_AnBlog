@@ -7,45 +7,54 @@ import java.util.Map;
 
 public class BlogSqlProvider {
 
-    public String select(Map<String, Object> map) {
+    public String getListByMap(Map<String, Object> map) {
         String queryStr = new SQL() {
             {
-                SELECT("*");
+                SELECT("blog.*, (SELECT COUNT(*) FROM blog_like WHERE blog_like.blogId = blog.id) AS likeNumber");
                 FROM("blog");
-                if (map.get("id") != null) WHERE("id = #{id}");
-                if (map.get("userId") != null) WHERE("userId = #{userId}");
-                if (map.get("categoryId") != null) WHERE("categoryId = #{categoryId}");
-                if (map.get("state") != null) WHERE("state = #{state}");
-                if (map.get("title") != null) WHERE("title LIKE CONCAT('%', #{title}, '%')");
-                if (map.get("mdContent") != null) WHERE("mdContent LIKE CONCAT('%', #{mdContent}, '%')");
-                if (map.get("htmlContent") != null) WHERE("htmlContent LIKE CONCAT('%', #{htmlContent}, '%')");
-                if (map.get("summary") != null) WHERE("summary LIKE CONCAT('%', #{summary}, '%')");
-                if (map.get("publishDate") != null) WHERE("publishDate = #{publishDate}");
-                if (map.get("editDate") != null) WHERE("editDate = #{editDate}");
-                if (map.get("viewNumber") != null) WHERE("viewNumber = #{viewNumber}");
-                ORDER_BY("editDate DESC");
+                if (map.get("tagsId") != null) {
+                    LEFT_OUTER_JOIN("blog_tags ON blog.id = blog_tags.blogId");
+                    WHERE("blog_tags.tagsId = #{tagsId}");
+                }
+                if (map.get("id") != null) WHERE("blog.id = #{id}");
+                if (map.get("userId") != null) WHERE("blog.userId = #{userId}");
+                if (map.get("categoryId") != null) WHERE("blog.categoryId = #{categoryId}");
+                if (map.get("state") != null) WHERE("blog.state = #{state}");
+                if (map.get("title") != null) WHERE("blog.title LIKE CONCAT('%', #{title}, '%')");
+                if (map.get("mdContent") != null) WHERE("blog.mdContent LIKE CONCAT('%', #{mdContent}, '%')");
+                if (map.get("htmlContent") != null) WHERE("blog.htmlContent LIKE CONCAT('%', #{htmlContent}, '%')");
+                if (map.get("summary") != null) WHERE("blog.summary LIKE CONCAT('%', #{summary}, '%')");
+                if (map.get("publishDate") != null) WHERE("blog.publishDate = #{publishDate}");
+                if (map.get("editDate") != null) WHERE("blog.editDate = #{editDate}");
+                if (map.get("viewNumber") != null) WHERE("blog.viewNumber = #{viewNumber}");
+                if (map.get("orderLikeNumber") != null) ORDER_BY("likeNumber DESC", "editDate DESC");
+                else ORDER_BY("editDate DESC");
                 LIMIT("#{start}, #{size}");
             }
         }.toString();
         return queryStr;
     }
 
-    public String selectTotal(Map<String, Object> map) {
+    public String getTotalByMap(Map<String, Object> map) {
         String queryStr = new SQL() {
             {
                 SELECT("COUNT(*)");
                 FROM("blog");
-                if (map.get("id") != null) WHERE("id = #{id}");
-                if (map.get("userId") != null) WHERE("userId = #{userId}");
-                if (map.get("categoryId") != null) WHERE("categoryId = #{categoryId}");
-                if (map.get("state") != null) WHERE("state = #{state}");
-                if (map.get("title") != null) WHERE("title LIKE CONCAT('%', #{title}, '%')");
-                if (map.get("mdContent") != null) WHERE("mdContent LIKE CONCAT('%', #{mdContent}, '%')");
-                if (map.get("htmlContent") != null) WHERE("htmlContent LIKE CONCAT('%', #{htmlContent}, '%')");
-                if (map.get("summary") != null) WHERE("summary LIKE CONCAT('%', #{summary}, '%')");
-                if (map.get("publishDate") != null) WHERE("publishDate = #{publishDate}");
-                if (map.get("editDate") != null) WHERE("editDate = #{editDate}");
-                if (map.get("viewNumber") != null) WHERE("viewNumber = #{viewNumber}");
+                if (map.get("tagsId") != null) {
+                    LEFT_OUTER_JOIN("blog_tags ON blog.id = blog_tags.blogId");
+                    WHERE("blog_tags.tagsId = #{tagsId}");
+                }
+                if (map.get("id") != null) WHERE("blog.id = #{id}");
+                if (map.get("userId") != null) WHERE("blog.userId = #{userId}");
+                if (map.get("categoryId") != null) WHERE("blog.categoryId = #{categoryId}");
+                if (map.get("state") != null) WHERE("blog.state = #{state}");
+                if (map.get("title") != null) WHERE("blog.title LIKE CONCAT('%', #{title}, '%')");
+                if (map.get("mdContent") != null) WHERE("blog.mdContent LIKE CONCAT('%', #{mdContent}, '%')");
+                if (map.get("htmlContent") != null) WHERE("blog.htmlContent LIKE CONCAT('%', #{htmlContent}, '%')");
+                if (map.get("summary") != null) WHERE("blog.summary LIKE CONCAT('%', #{summary}, '%')");
+                if (map.get("publishDate") != null) WHERE("blog.publishDate = #{publishDate}");
+                if (map.get("editDate") != null) WHERE("blog.editDate = #{editDate}");
+                if (map.get("viewNumber") != null) WHERE("blog.viewNumber = #{viewNumber}");
             }
         }.toString();
         return queryStr;

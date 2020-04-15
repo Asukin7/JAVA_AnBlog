@@ -7,14 +7,14 @@ import java.util.List;
 
 public interface TagsDao {
 
-    @Select("SELECT * FROM tags ORDER BY RAND() LIMIT 10")
-    public List<Tags> getListByRand();
-
     @Select("SELECT * FROM tags WHERE id = #{id}")
     public Tags getById(Integer id);
 
     @Select("SELECT * FROM tags WHERE name = #{name}")
     public Tags getByName(String name);
+
+    @Select("SELECT * FROM tags ORDER BY RAND() LIMIT 10")
+    public List<Tags> getListByRand();
 
     @Insert("INSERT INTO tags(name) VAlUES(#{name})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
