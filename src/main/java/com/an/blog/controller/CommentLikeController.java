@@ -16,7 +16,7 @@ public class CommentLikeController {
 
     @RequiresRoles("user")
     @PostMapping("/user/commentLike")
-    public Result insertByTokenAndCommentLike(@RequestHeader("Authorization") String token, @RequestBody CommentLike commentLike) {
+    public Result userInsertCommentLike(@RequestHeader("Authorization") String token, @RequestBody CommentLike commentLike) {
         Result result = new Result();
 
         if (!commentLikeService.insertByTokenAndCommentLike(token, commentLike)) {// 点赞失败
@@ -29,7 +29,7 @@ public class CommentLikeController {
 
     @RequiresRoles("user")
     @DeleteMapping("/user/commentLike/{commentId}")
-    public Result deleteByTokenAndCommentId(@RequestHeader("Authorization") String token, @PathVariable Integer commentId) {
+    public Result userDeleteCommentLike(@RequestHeader("Authorization") String token, @PathVariable Integer commentId) {
         Result result = new Result();
 
         if (!commentLikeService.deleteByTokenAndCommentId(token, commentId)) {// 删赞失败

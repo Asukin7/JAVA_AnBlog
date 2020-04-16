@@ -18,7 +18,7 @@ public class TagsController {
     private TagsService tagsService;
 
     @GetMapping("/tourist/tagsList/rand")
-    public Result touristGetListByRand() {
+    public Result touristGetTagsListByRand() {
         Result result = new Result();
 
         List<Tags> tagsList = tagsService.getListByRand();

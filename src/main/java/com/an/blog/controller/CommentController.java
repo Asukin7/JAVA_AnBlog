@@ -20,7 +20,7 @@ public class CommentController {
 
     @RequiresRoles("user")
     @GetMapping("/user/rootCommentList/{blogId}")
-    public Result userGetCommentListByBlogId(@RequestHeader("Authorization") String token, @PathVariable Integer blogId, @RequestParam Integer page) {
+    public Result userGetRootCommentList(@RequestHeader("Authorization") String token, @PathVariable Integer blogId, @RequestParam Integer page) {
         Result result = new Result();
 
         // 获取评论列表
@@ -37,7 +37,7 @@ public class CommentController {
 
     @RequiresRoles("user")
     @GetMapping("/user/childCommentList/{rootId}")
-    public Result userGetChildCommentListByBlogId(@RequestHeader("Authorization") String token, @PathVariable Integer rootId, @RequestParam Integer page) {
+    public Result userGetChildCommentList(@RequestHeader("Authorization") String token, @PathVariable Integer rootId, @RequestParam Integer page) {
         Result result = new Result();
 
         // 获取评论列表
@@ -83,7 +83,7 @@ public class CommentController {
     }
 
     @GetMapping("/tourist/rootCommentList/{blogId}")
-    public Result touristGetCommentListByBlogId(@PathVariable Integer blogId, @RequestParam Integer page) {
+    public Result touristGetRootCommentList(@PathVariable Integer blogId, @RequestParam Integer page) {
         Result result = new Result();
 
         // 获取评论列表
@@ -99,7 +99,7 @@ public class CommentController {
     }
 
     @GetMapping("/tourist/childCommentList/{rootId}")
-    public Result touristGetChildCommentListByBlogId(@PathVariable Integer rootId, @RequestParam Integer page) {
+    public Result touristGetChildCommentList(@PathVariable Integer rootId, @RequestParam Integer page) {
         Result result = new Result();
 
         // 获取评论列表

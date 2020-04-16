@@ -18,7 +18,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/tourist/categoryList")
-    public Result touristGetList() {
+    public Result touristGetCategoryList() {
         Result result = new Result();
 
         List<Category> categoryList = categoryService.getList();

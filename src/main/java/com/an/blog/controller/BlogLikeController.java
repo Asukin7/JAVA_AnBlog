@@ -16,7 +16,7 @@ public class BlogLikeController {
 
     @RequiresRoles("user")
     @PostMapping("/user/blogLike")
-    public Result insertByTokenAndBlogLike(@RequestHeader("Authorization") String token, @RequestBody BlogLike blogLike) {
+    public Result userInsertBlogLike(@RequestHeader("Authorization") String token, @RequestBody BlogLike blogLike) {
         Result result = new Result();
 
         if (!blogLikeService.insertByTokenAndBlogLike(token, blogLike)) {// 点赞失败
@@ -29,7 +29,7 @@ public class BlogLikeController {
 
     @RequiresRoles("user")
     @DeleteMapping("/user/blogLike/{blogId}")
-    public Result deleteByTokenAndBlogId(@RequestHeader("Authorization") String token, @PathVariable Integer blogId) {
+    public Result userDeleteBlogLike(@RequestHeader("Authorization") String token, @PathVariable Integer blogId) {
         Result result = new Result();
 
         if (!blogLikeService.deleteByTokenAndBlogId(token, blogId)) {// 删赞失败
