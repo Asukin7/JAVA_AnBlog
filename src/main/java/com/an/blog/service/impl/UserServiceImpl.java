@@ -7,12 +7,15 @@ import com.an.blog.dao.UserRoleDao;
 import com.an.blog.service.MailService;
 import com.an.blog.service.UserService;
 import com.an.blog.util.MD5Util;
+import com.an.blog.util.PageUtil;
 import com.an.blog.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service("userService")
@@ -179,6 +182,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<Role> getRoleListByToken(String token) {
+        // 获取id
+        Integer id = TokenUtil.getTokenData(token, "id").asInt();// id
+        if (id == null)  return null;// id为空 错误
+
+        return userRoleDao.getRoleListByUserId(id);
+    }
+
+    @Override
     public boolean checkUserByTokenAndPassword(String token, String password) {
         User user = new User();
         // 设置id
@@ -231,6 +243,50 @@ public class UserServiceImpl implements UserService {
         Integer updateNumber = userDao.updatePasswordByIdAndUsername(user);
         if (updateNumber == null || updateNumber == 0) return false;
         else return true;
+    }
+
+    @Override
+    public List<User> getUserListByMap(Map<String, Object> map) {
+        // 设置分页查找
+        if (map.get("page") == null) map.put("page", 1);// 默认第一页
+        else map.put("page", Integer.parseInt(String.valueOf(map.get("page"))));// 转Integer
+        if (map.get("size") == null) map.put("size", 10);// 默认一页10条
+        else map.put("size", Integer.parseInt(String.valueOf(map.get("size"))));// 转Integer
+        map.put("start", PageUtil.getStart((Integer) map.get("page"), (Integer) map.get("size")));// 计算开始条数
+
+        return userDao.getListByMap(map);
+    }
+
+    @Override
+    public Integer getUserTotalByMap(Map<String, Object> map) {
+        return userDao.getTotalByMap(map);
+    }
+
+    @Override
+    public boolean updateEnabledByIdAndEnabled(Integer id, Integer enabled) {
+        User user = new User();
+        if (id == null) return false;
+        else user.setId(id);
+        if (enabled == null) return false;
+        else user.setEnabled(enabled);
+
+        Integer updateNumber = userDao.updateEnabledById(user);
+        if (updateNumber == null || updateNumber == 0) return false;
+        else return true;
+    }
+
+    @Override
+    public boolean updateRoleListByIdAndRoleList(Integer id, List<Role> roleList) {
+        List<Integer> roleIdList = new ArrayList<Integer>();
+        for (Role role : roleList) {
+            roleIdList.add(role.getId());
+        }
+
+        userRoleDao.deleteByUserId(id);// 删除此用户的所有角色
+
+        Integer insertNumber = userRoleDao.insertByRoleIdListAndBlogId(roleIdList, id);// 为此用户添加角色
+        if (roleList.size() == insertNumber) return true;
+        else return false;
     }
 
 }

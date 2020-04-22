@@ -15,10 +15,19 @@ public interface UserRoleDao {
     public List<UserRole> getByRoleId(Integer roleId);
 
     @Insert("INSERT INTO user_role(userId, roleId) VALUES(#{userId}, #{roleId})")
-    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     public Integer insert(Integer userId, Integer roleId);
 
-    @Delete("DELETE FROM user_role WHERE id = #{id}")
-    public Integer deleteById(Integer id);
+    @Insert({
+            "<script>",
+            "INSERT INTO user_role(userId, roleId) VALUES ",
+            "<foreach collection='roleIdList' item='item' index='index' separator=','>",
+            "(#{userId}, #{item})",
+            "</foreach>",
+            "</script>"
+    })
+    public Integer insertByRoleIdListAndBlogId(List<Integer> roleIdList, Integer userId);
+
+    @Delete("DELETE FROM user_role WHERE userId = #{userId}")
+    public Integer deleteByUserId(Integer userId);
 
 }

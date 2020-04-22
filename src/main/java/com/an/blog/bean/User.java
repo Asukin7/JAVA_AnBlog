@@ -1,6 +1,7 @@
 package com.an.blog.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class User implements Serializable {
 
@@ -13,6 +14,7 @@ public class User implements Serializable {
     private String introduction;
     private String profilePhoto;
     private String appreciationCode;
+    private List<Role> roleList;
 
     public Integer getId() {
         return id;
@@ -86,6 +88,14 @@ public class User implements Serializable {
         this.appreciationCode = appreciationCode;
     }
 
+    public List<Role> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<Role> roleList) {
+        this.roleList = roleList;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -98,6 +108,7 @@ public class User implements Serializable {
                 ", introduction='" + introduction + '\'' +
                 ", profilePhoto='" + profilePhoto + '\'' +
                 ", appreciationCode='" + appreciationCode + '\'' +
+                ", roleList=" + roleList +
                 '}';
     }
 

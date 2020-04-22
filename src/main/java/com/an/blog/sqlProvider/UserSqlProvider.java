@@ -7,10 +7,30 @@ import java.util.Map;
 
 public class UserSqlProvider {
 
-    public String select(Map<String, Object> map) {
+    public String getListByMap(Map<String, Object> map) {
         String queryStr = new SQL() {
             {
-                SELECT("*");
+                SELECT("id, enabled, username, email, nickname, introduction, profilePhoto, appreciationCode");
+                FROM("user");
+                if (map.get("id") != null) WHERE("id = #{id}");
+                if (map.get("enabled") != null) WHERE("enabled = #{enabled}");
+                if (map.get("username") != null) WHERE("username = #{username}");
+                if (map.get("email") != null) WHERE("email = #{email}");
+//                if (map.get("password") != null) WHERE("password = #{password}");
+                if (map.get("nickname") != null) WHERE("nickname = #{nickname}");
+                if (map.get("introduction") != null) WHERE("introduction = #{introduction}");
+                if (map.get("profilePhoto") != null) WHERE("profilePhoto = #{profilePhoto}");
+                if (map.get("appreciationCode") != null) WHERE("appreciationCode = #{appreciationCode}");
+                LIMIT("#{start}, #{size}");
+            }
+        }.toString();
+        return queryStr;
+    }
+
+    public String getTotalByMap(Map<String, Object> map) {
+        String queryStr = new SQL() {
+            {
+                SELECT("count(*)");
                 FROM("user");
                 if (map.get("id") != null) WHERE("id = #{id}");
                 if (map.get("enabled") != null) WHERE("enabled = #{enabled}");

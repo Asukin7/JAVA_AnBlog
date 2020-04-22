@@ -9,11 +9,18 @@ import java.util.Map;
 
 public interface UserDao {
 
-    @SelectProvider(type = UserSqlProvider.class, method = "select")
-    public List<User> select(Map<String, Object> map);
+    @SelectProvider(type = UserSqlProvider.class, method = "getListByMap")
+    @Results(id = "", value = {
+            @Result(property = "id", column = "id", id = true),
+            @Result(property = "roleList", column = "id", many = @Many(select = "com.an.blog.dao.UserRoleDao.getRoleListByUserId"))
+    })
+    public List<User> getListByMap(Map<String, Object> map);
 
-    @Select("SELECT * FROM user WHERE id = #{id}")
-    public User getById(Integer id);
+    @SelectProvider(type = UserSqlProvider.class, method = "getTotalByMap")
+    public Integer getTotalByMap(Map<String, Object> map);
+
+//    @Select("SELECT * FROM user WHERE id = #{id}")
+//    public User getById(Integer id);
 
     @Select("SELECT id, enabled, nickname, introduction, profilePhoto, appreciationCode FROM user WHERE id = #{id}")
     public User getInfoById(Integer id);
@@ -42,6 +49,9 @@ public interface UserDao {
 
     @UpdateProvider(type = UserSqlProvider.class, method = "updateInfo")
     public Integer updateInfo(User user);
+
+    @Update("UPDATE user SET enabled = #{enabled} WHERE id = #{id}")
+    public Integer updateEnabledById(User user);
 
     @Update("UPDATE user SET password = #{password} WHERE id = #{id} AND username = #{username}")
     public Integer updatePasswordByIdAndUsername(User user);

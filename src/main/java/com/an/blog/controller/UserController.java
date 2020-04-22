@@ -1,5 +1,6 @@
 package com.an.blog.controller;
 
+import com.an.blog.bean.Role;
 import com.an.blog.bean.User;
 import com.an.blog.common.Result;
 import com.an.blog.common.ResultStatus;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,6 +18,47 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @RequiresRoles("admin")
+    @GetMapping("/admin/userList")
+    public Result adminGetUserList(@RequestParam Map<String, Object> map) {
+        Result result = new Result();
+
+        List<User> userList = userService.getUserListByMap(map);
+        Integer userTotal = userService.getUserTotalByMap(map);
+
+        Map<String, Object> resultData = new HashMap<String, Object>();
+        resultData.put("userList", userList);
+        resultData.put("userTotal", userTotal);
+        result.setData(resultData);
+        return result;
+    }
+
+    @RequiresRoles("admin")
+    @PutMapping("/admin/user/{id}/enabled")
+    public Result adminUpdateUserEnabled(@PathVariable Integer id, @RequestBody User user) {
+        Result result = new Result();
+
+        if (!userService.updateEnabledByIdAndEnabled(id, user.getEnabled())) {
+            result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
+            return result;
+        }
+
+        return result;
+    }
+
+    @RequiresRoles("admin")
+    @PutMapping("/admin/user/{id}/roleList")
+    public Result adminUpdateUserRoleList(@PathVariable Integer id, @RequestBody User user) {
+        Result result = new Result();
+
+        if (!userService.updateRoleListByIdAndRoleList(id, user.getRoleList())) {
+            result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
+            return result;
+        }
+
+        return result;
+    }
 
     @RequiresRoles("user")
     @GetMapping("/user/info")
@@ -47,6 +90,23 @@ public class UserController {
 
         Map<String, Object> resultData = new HashMap<String, Object>();
         resultData.put("user", user);
+        result.setData(resultData);
+        return result;
+    }
+
+    @RequiresRoles("user")
+    @GetMapping("/user/roleList")
+    public Result getRoleList(@RequestHeader("Authorization") String token) {
+        Result result = new Result();
+
+        List<Role> roleList = userService.getRoleListByToken(token);
+        if (roleList == null) {
+            result.setResultStatus(ResultStatus.UNKNOWN);//需要修改------需要修改------需要修改------需要修改------需要修改------需要修改
+            return result;
+        }
+
+        Map<String, Object> resultData = new HashMap<String, Object>();
+        resultData.put("roleList", roleList);
         result.setData(resultData);
         return result;
     }

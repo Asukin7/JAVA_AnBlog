@@ -3,7 +3,12 @@ package com.an.blog.dao;
 import com.an.blog.bean.Role;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 public interface RoleDao {
+
+    @Select("SELECT * FROM role")
+    public List<Role> getList();
 
     @Select("SELECT * FROM role WHERE id = #{id}")
     public Role getById(Integer id);

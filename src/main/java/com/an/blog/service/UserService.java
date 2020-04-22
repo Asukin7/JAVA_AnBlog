@@ -4,6 +4,7 @@ import com.an.blog.bean.Role;
 import com.an.blog.bean.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -35,10 +36,20 @@ public interface UserService {
 
     public User getUserSafeByToken(String token);
 
+    public List<Role> getRoleListByToken(String token);
+
     public boolean checkUserByTokenAndPassword(String token, String password);
 
     public boolean updateUserInfoByTokenAndUser(String token, User user);
 
     public boolean updatePasswordByTokenAndPassword(String token, String password);
+
+    public List<User> getUserListByMap(Map<String, Object> map);
+
+    public Integer getUserTotalByMap(Map<String, Object> map);
+
+    public boolean updateEnabledByIdAndEnabled(Integer id, Integer enabled);
+
+    public boolean updateRoleListByIdAndRoleList(Integer id, List<Role> roleList);
 
 }
